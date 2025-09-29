@@ -9,7 +9,7 @@ class FooterWidget extends StatelessWidget {
       child: Column(
         children: [
           Text(
-            '© 2024 Smart Bin Monitoring System. All rights reserved.',
+            '© 2025 Smart Bin Monitoring System. All rights reserved.',
             style: TextStyle(color: Colors.white),
           ),
           SizedBox(height: 5),
