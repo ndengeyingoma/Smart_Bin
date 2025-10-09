@@ -8,8 +8,7 @@ import 'services_section.dart';
 import 'partners_section.dart';
 import 'contacts_section.dart';
 import '../../widgets/footer_widget.dart';
-import '../../widgets/responsive_wrapper.dart';
-import '../../widgets/navigation_bar.dart';
+import '../../widgets/custom_navigation_bar.dart';
 
 class LandingPage extends StatefulWidget {
   const LandingPage({super.key});
@@ -59,25 +58,15 @@ class _LandingPageState extends State<LandingPage> {
     }
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(_sectionTitles[_currentIndex]),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.push(
-              context,
-              MaterialPageRoute(builder: (_) => LoginPage()),
-            ),
-            child: const Text('Login', style: TextStyle(color: Colors.white)),
-          ),
-        ],
-      ),
-      appBar: NavigationBar(
-        title: 'Smart Bin Monitoring System',
+      appBar: CustomNavigationBar(
+        title: _sectionTitles[_currentIndex],
         isAuthenticated: authService.isAuthenticated,
-        onLoginPressed: () => Navigator.push(
-          context,
-          MaterialPageRoute(builder: (_) => LoginPage()),
-        ),
+        onLoginPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => LoginPage()),
+          );
+        },
         onLogoutPressed: () async {
           await authService.logout();
           Navigator.pushAndRemoveUntil(
@@ -87,27 +76,11 @@ class _LandingPageState extends State<LandingPage> {
           );
         },
       ),
-
-      body: ResponsiveWrapper(
-        mobile: Column(
-          children: [
-            Expanded(child: _sections[_currentIndex]),
-            FooterWidget(),
-          ],
-        ),
-        tablet: Column(
-          children: [
-            Expanded(child: _sections[_currentIndex]),
-            FooterWidget(),
-          ],
-        ),
-        desktop: Row(
-          children: [
-            Expanded(child: _sections[_currentIndex]),
-            const VerticalDivider(),
-            Expanded(child: FooterWidget()),
-          ],
-        ),
+      body: Column(
+        children: [
+          Expanded(child: _sections[_currentIndex]),
+          const FooterWidget(),
+        ],
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
