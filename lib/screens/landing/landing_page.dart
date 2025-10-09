@@ -8,6 +8,8 @@ import 'services_section.dart';
 import 'partners_section.dart';
 import 'contacts_section.dart';
 import '../../widgets/footer_widget.dart';
+import '../../widgets/responsive_wrapper.dart';
+import '../../widgets/navigation_bar.dart';
 
 class LandingPage extends StatefulWidget {
   const LandingPage({super.key});
@@ -20,7 +22,6 @@ class _LandingPageState extends State<LandingPage> {
   int _currentIndex = 0;
   bool _isLoading = true;
 
-  // ❌ Remove const — these widgets don’t have const constructors
   final List<Widget> _sections = [
     HomeSection(),
     ServicesSection(),
@@ -39,14 +40,9 @@ class _LandingPageState extends State<LandingPage> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      try {
-        final authService = Provider.of<AuthService>(context, listen: false);
-        await authService.loadUser();
-      } catch (e) {
-        debugPrint('Error loading user: $e');
-      } finally {
-        setState(() => _isLoading = false);
-      }
+      final authService = Provider.of<AuthService>(context, listen: false);
+      await authService.loadUser();
+      setState(() => _isLoading = false);
     });
   }
 
@@ -69,17 +65,49 @@ class _LandingPageState extends State<LandingPage> {
           TextButton(
             onPressed: () => Navigator.push(
               context,
-              MaterialPageRoute(builder: (_) => LoginPage()), // ❌ Remove const
+              MaterialPageRoute(builder: (_) => LoginPage()),
             ),
             child: const Text('Login', style: TextStyle(color: Colors.white)),
           ),
         ],
       ),
-      body: Column(
-        children: [
-          Expanded(child: _sections[_currentIndex]),
-          FooterWidget(), // ❌ Remove const
-        ],
+      appBar: NavigationBar(
+        title: 'Smart Bin Monitoring System',
+        isAuthenticated: authService.isAuthenticated,
+        onLoginPressed: () => Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => LoginPage()),
+        ),
+        onLogoutPressed: () async {
+          await authService.logout();
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (_) => const LandingPage()),
+            (route) => false,
+          );
+        },
+      ),
+
+      body: ResponsiveWrapper(
+        mobile: Column(
+          children: [
+            Expanded(child: _sections[_currentIndex]),
+            FooterWidget(),
+          ],
+        ),
+        tablet: Column(
+          children: [
+            Expanded(child: _sections[_currentIndex]),
+            FooterWidget(),
+          ],
+        ),
+        desktop: Row(
+          children: [
+            Expanded(child: _sections[_currentIndex]),
+            const VerticalDivider(),
+            Expanded(child: FooterWidget()),
+          ],
+        ),
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../services/auth_service.dart';
+import '../../widgets/custom_navigation_bar.dart';
 import '../../models/bin_model.dart';
 import 'bin_list_section.dart';
 import 'user_management_section.dart';
@@ -33,21 +34,23 @@ class DashboardPage extends StatelessWidget {
     ];
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Dashboard'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.logout),
-            onPressed: () async {
-              await authService.logout();
-              Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(builder: (_) => const LandingPage()),
-                (route) => false,
-              );
-            },
-          ),
-        ],
+      appBar: CustomNavigationBar(
+        title: 'Dashboard',
+        isAuthenticated: authService.isAuthenticated,
+        onLoginPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => const LandingPage()),
+          );
+        },
+        onLogoutPressed: () async {
+          await authService.logout();
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (_) => const LandingPage()),
+            (route) => false,
+          );
+        },
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
