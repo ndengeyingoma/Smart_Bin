@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../auth/login_page.dart'; // Add this import
 
 class HomeSection extends StatelessWidget {
   @override
@@ -75,7 +76,10 @@ class HomeSection extends StatelessWidget {
             SizedBox(height: 30),
             ElevatedButton.icon(
               onPressed: () {
-                // Navigate to login
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => LoginPage()),
+                );
               },
               icon: Icon(Icons.login),
               label: Text('Get Started - Login Now'),

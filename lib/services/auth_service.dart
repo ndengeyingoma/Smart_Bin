@@ -15,10 +15,8 @@ class AuthService with ChangeNotifier {
     _isLoading = true;
     notifyListeners();
 
-    // Simulate API call
-    await Future.delayed(Duration(seconds: 2));
+    await Future.delayed(const Duration(seconds: 2));
 
-    // Mock login - replace with actual API call
     if (email == 'admin@smartbin.com' && password == 'admin123') {
       _user = User(
         id: '1',
@@ -39,7 +37,6 @@ class AuthService with ChangeNotifier {
       throw Exception('Invalid credentials');
     }
 
-    // Save to shared preferences
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('user', _user!.toJson().toString());
 
@@ -57,16 +54,27 @@ class AuthService with ChangeNotifier {
   Future<void> loadUser() async {
     final prefs = await SharedPreferences.getInstance();
     final userString = prefs.getString('user');
+
     if (userString != null) {
-      // Parse user data (simplified)
-      _user = User(
-        id: '1',
-        username: 'Saved User',
-        email: 'saved@user.com',
-        role: 'user',
-        token: 'saved_token',
-      );
+      if (userString.contains('admin@smartbin.com')) {
+        _user = User(
+          id: '1',
+          username: 'Admin User',
+          email: 'admin@smartbin.com',
+          role: 'admin',
+          token: 'mock_jwt_token',
+        );
+      } else if (userString.contains('user@smartbin.com')) {
+        _user = User(
+          id: '2',
+          username: 'Regular User',
+          email: 'user@smartbin.com',
+          role: 'user',
+          token: 'mock_jwt_token',
+        );
+      }
     }
+
     notifyListeners();
   }
 }

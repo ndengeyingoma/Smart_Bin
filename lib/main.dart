@@ -11,7 +11,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => AuthService(),
+      create: (context) => AuthService()..loadUser(),
       child: MaterialApp(
         title: 'Smart Bin Monitoring',
         theme: ThemeData(

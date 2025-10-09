@@ -4,53 +4,64 @@ import '../../services/auth_service.dart';
 import '../../models/bin_model.dart';
 import 'bin_list_section.dart';
 import 'user_management_section.dart';
+import '../landing/landing_page.dart';
 
 class DashboardPage extends StatelessWidget {
-  final List<Bin> mockBins = [
-    Bin(
-      id: '1',
-      name: 'Main Street Bin',
-      location: 'Downtown',
-      fillLevel: 75.0,
-      status: 'Almost Full',
-      lastUpdated: DateTime.now(),
-    ),
-    Bin(
-      id: '2',
-      name: 'Park Bin',
-      location: 'Central Park',
-      fillLevel: 30.0,
-      status: 'Moderate',
-      lastUpdated: DateTime.now(),
-    ),
-  ];
+  const DashboardPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     final authService = Provider.of<AuthService>(context);
 
+    final List<Bin> mockBins = [
+      Bin(
+        id: '1',
+        name: 'Main Street Bin',
+        location: 'Downtown',
+        fillLevel: 75.0,
+        status: 'Almost Full',
+        lastUpdated: DateTime.now(),
+      ),
+      Bin(
+        id: '2',
+        name: 'Park Bin',
+        location: 'Central Park',
+        fillLevel: 30.0,
+        status: 'Moderate',
+        lastUpdated: DateTime.now(),
+      ),
+    ];
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('Dashboard'),
+        title: const Text('Dashboard'),
         actions: [
           IconButton(
-            icon: Icon(Icons.logout),
-            onPressed: () => authService.logout(),
+            icon: const Icon(Icons.logout),
+            onPressed: () async {
+              await authService.logout();
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (_) => const LandingPage()),
+                (route) => false,
+              );
+            },
           ),
         ],
       ),
       body: Padding(
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               'Welcome back, ${authService.user?.username ?? 'User'}!',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 10),
-            Text('Role: ${authService.user?.role}'),
-            SizedBox(height: 20),
-            if (authService.isAdmin) UserManagementSection(),
+            const SizedBox(height: 10),
+            Text('Role: ${authService.user?.role ?? 'Unknown'}'),
+            const SizedBox(height: 20),
+            if (authService.isAdmin) const UserManagementSection(),
             Expanded(child: BinListSection(bins: mockBins)),
           ],
         ),

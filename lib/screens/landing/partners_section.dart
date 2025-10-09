@@ -58,7 +58,7 @@ class PartnersSection extends StatelessWidget {
                 'Tech Innovations',
                 Icons.lightbulb,
                 Colors.red,
-              ), // Fixed icon
+              ),
             ],
           ),
         ],

@@ -57,14 +57,8 @@ class ContactsSection extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               _buildSocialIcon(Icons.facebook, Colors.blue[800]!),
-              _buildSocialIcon(
-                Icons.camera_alt,
-                Colors.pink,
-              ), // Replaced twitter
-              _buildSocialIcon(
-                Icons.link,
-                Colors.blue[700]!,
-              ), // Replaced linkedin
+              _buildSocialIcon(Icons.camera_alt, Colors.pink),
+              _buildSocialIcon(Icons.link, Colors.blue[700]!),
               _buildSocialIcon(Icons.email, Colors.red),
             ],
           ),
